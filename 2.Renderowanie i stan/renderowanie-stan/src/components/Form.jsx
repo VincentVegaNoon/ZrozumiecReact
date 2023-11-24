@@ -1,0 +1,60 @@
+import { useState } from "react";
+
+export function Form() {
+  const [review, setReview] = useState(null);
+  const [inputValue, setInputValue] = useState("Filip");
+  const [textareaValue, setTextareaValue] = useState("Tekst");
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const author = inputValue;
+    const text = textareaValue;
+
+    setReview({ author, text });
+  }
+
+  console.log("Wartosc zmiennej stanowej input: ", inputValue);
+  console.log("Wartosc zmiennej stanowej textarea: ", textareaValue);
+  return (
+    <>
+      {review && (
+        <article>
+          <strong>{review.author}</strong>
+          <p>{review.text}</p>
+        </article>
+      )}
+      <h2>Dodaj recenzje</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <div>
+            <label htmlFor="author">Autor</label>
+          </div>
+          <input
+            type="text"
+            name="author"
+            id="author"
+            value={inputValue}
+            onChange={(event) => {
+              setInputValue(event.target.value);
+            }}
+          />
+          <div>
+            <label htmlFor="text">Tekst</label>
+          </div>
+          <textarea
+            name="text"
+            id="text"
+            value={textareaValue}
+            onChange={(event) => {
+              setTextareaValue(event.target.value);
+            }}
+          ></textarea>
+        </div>
+        <button type="submit" disabled={inputValue === "" || textareaValue === ""}>
+          Dodaj
+        </button>
+      </form>
+    </>
+  );
+}
