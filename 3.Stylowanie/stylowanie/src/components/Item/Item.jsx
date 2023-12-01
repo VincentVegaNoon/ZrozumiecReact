@@ -1,35 +1,19 @@
 import { useState } from "react";
-import styled from "styled-components";
-import { StyledButton } from "../styles/StyledButton";
 
-const StyledItem = styled.li`
-    background: salmon;
-    padding: 30px 50px;
-    border-radius: 20px;
-    text-align: center;
-    overflow: hidden;
-`;
+export function Item({ emoji }) {
+  const [zoomed, setZoomed] = useState(false);
 
-const StyledEmoji = styled.span`
-    display: block;
-    margin-bottom: 42px;
-    font-size: 32px;
-    transition: transform 0.3s;
-    ${({ $zoomed }) => $zoomed && "transform: scale(2)"}
-`;
-export function Item({ emoji, className }) {
-    const [zoomed, setZoomed] = useState(false);
-
-    return (
-        <li className={className}>
-            <span>{emoji}</span>
-            <button
-                onClick={() => {
-                    setZoomed((wasZoomed) => !wasZoomed);
-                }}
-            >
-                {zoomed ? "Oddal" : "Przybliż"}
-            </button>
-        </li>
-    );
+  return (
+    <li className="bg-salmon py-8 px-12 rounded-3xl text-center overflow-hidden">
+      <span className={`block mb-10 font text-3xl transition-transform ${zoomed ? "scale-[2]" : ""}`}>{emoji}</span>
+      <button
+        className={`bg-transparent border border-solid border-white p-3 rounded cursour-pointer w-[120px] text-white transition-colors hover:text-salmon hover:bg-white`}
+        onClick={() => {
+          setZoomed((wasZoomed) => !wasZoomed);
+        }}
+      >
+        {zoomed ? "Oddal" : "Przybliż"}
+      </button>
+    </li>
+  );
 }
