@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { List } from "../List/List";
 import { Form } from "../Form/Form";
 import { ErrorMessage } from "../ErrorMessage/ErrorMessage";
 import { FilterButton } from "../FilterButton/FilterButton";
+import { getCategoryInfo } from "../../utils/getCategoryInfo";
+import { Info } from "../Info/Info";
 import styles from "./Panel.module.css";
 const url = "http://localhost:3000/words";
 
@@ -13,12 +15,29 @@ export function Panel() {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
+    let isCanceled = false;
     const params = selectedCategory ? `?category=${selectedCategory}` : "";
     fetch(`${url}${params}`)
       .then((res) => res.json())
-      .then((res) => setData(res));
-    setIsLoading(false);
+      .then((res) => {
+        if (!isCanceled) {
+          setData(res);
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      isCanceled = true;
+    };
   }, [selectedCategory]);
+
+  const categoryInfo = useMemo(() => getCategoryInfo(selectedCategory), [selectedCategory]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => alert("Sprawdz nasza nowa strone"), 3000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
 
   function handleFormSubmit(formData) {
     fetch(`${url}`, {
@@ -70,6 +89,7 @@ export function Panel() {
     <>
       {error && <ErrorMessage>{error}</ErrorMessage>}
       <section className={styles.section}>
+        <Info>{categoryInfo}</Info>
         <Form onFormSubmit={handleFormSubmit} />
         <div className={styles.filters}>
           <FilterButton active={selectedCategory === null} onClick={() => handleFilterClick(null)}>
