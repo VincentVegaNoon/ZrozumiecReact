@@ -18,7 +18,15 @@ export function Panel() {
     let isCanceled = false;
     const params = selectedCategory ? `?category=${selectedCategory}` : "";
     fetch(`${url}${params}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw new Error('Blad ladowania danych');
+        }
+        })
+        res.json();
+      })
       .then((res) => {
         if (!isCanceled) {
           setData(res);
